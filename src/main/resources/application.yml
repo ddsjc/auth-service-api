@@ -1,0 +1,24 @@
+
+server:
+  port: 8081
+  error:
+    whitelabel:
+      enabled: false
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+
+jwt:
+  secret: TWVnYUxhcmdlU2lnbmluZ1NlY3JldEtleUZvckF1dGhTZXJ2aWNlTWVnYUxhcmdlU2lnbmluZ1NlY3JldEtleUZvclRhc2tUcmFja2VyU2VydmljZQ==
+  expiration:  86400000
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost/auth-service
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update

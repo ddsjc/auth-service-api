@@ -1,5 +1,6 @@
 package danila.sukhov.auth_service.configs.helpers;
 
+import danila.sukhov.auth_service.configs.jwt.AuthTokenFilter;
 import danila.sukhov.auth_service.configs.jwt.JWTUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 
@@ -23,17 +25,24 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableMethodSecurity
 public class WebSecurityConfig {
+
     @Autowired
     JWTUtils jwtProvider;
+
+    @Bean
+    public AuthTokenFilter authenticationJwtTokenFilter() {
+        return new AuthTokenFilter();
+
+    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable()) // Отключаем CSRF (если API работает без форм)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll() // Доступ для эндпоинтов аутентификации
-                        .anyRequest()
-                        .authenticated() // Остальные запросы требуют авторизации
-                );
+                        .anyRequest().authenticated() // Остальные запросы требуют авторизации
+                )
+                .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class); // Добавляем кастомный JWT фильтр перед UsernamePasswordAuthenticationFilter
 
         return http.build();
     }
@@ -43,3 +52,7 @@ public class WebSecurityConfig {
         return configuration.getAuthenticationManager();
     }
 }
+
+
+
+

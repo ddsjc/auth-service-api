@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -26,7 +27,9 @@ import java.io.IOException;
 @EnableWebSecurity
 @Configuration
 public class AuthTokenFilter extends OncePerRequestFilter {
+    @Autowired
     JWTUtils jwtUtils;
+    @Autowired
     UserDetailsServiceImp userDetailsServiceImp;
 
     @Override

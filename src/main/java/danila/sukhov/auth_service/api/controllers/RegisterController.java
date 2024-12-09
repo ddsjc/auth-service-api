@@ -26,8 +26,8 @@ public class RegisterController {
     UserService userService;
 
     UserServiceImpl userServiceImpl;
-    public static final String LOG_IN = "api/auth/log-in";
-    public static final String SIGN_IN = "api/auth/sign-in";
+    public static final String LOG_IN = "/auth/log-in";
+    public static final String SIGN_IN = "/auth/sign-in";
 
 
     @PostMapping(LOG_IN)

@@ -30,17 +30,17 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
-    public static final String GET_USER = "api/user/get";
-    public static final String UPDATE_USER = "api/user/update";
+    public static final String GET_USER = "/user/get";
+    public static final String UPDATE_USER = "/user/update";
 
     @GetMapping(GET_USER)
     public ResponseEntity<User> getUser(@AuthenticationPrincipal UserDetails userDetails){
-        User user = userRepository.findUserByLogin(userDetails.getUsername());
+        User user = userService.findUserByLogin(userDetails.getUsername()); //userRepository
         return ResponseEntity.ok(user);
     }
     @PatchMapping(UPDATE_USER)
     public ResponseEntity<User> updateUser(@RequestBody UpdateDTO actorDto, @AuthenticationPrincipal UserDetails userDetails){
-        User currentActor = userRepository.findUserByLogin(userDetails.getUsername());
+        User currentActor = userService.findUserByLogin(userDetails.getUsername()); //userRepository
         User newActor = userService.update(actorDto, currentActor);
         return ResponseEntity.ok(newActor);
     }

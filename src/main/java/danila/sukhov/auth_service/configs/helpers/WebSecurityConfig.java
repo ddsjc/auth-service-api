@@ -4,6 +4,7 @@ import danila.sukhov.auth_service.configs.jwt.JWTUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,14 +23,16 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableMethodSecurity
 public class WebSecurityConfig {
+    @Autowired
     JWTUtils jwtProvider;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable()) // Отключаем CSRF (если API работает без форм)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(new AntPathRequestMatcher("/api/auth/**")).permitAll() // Доступ для эндпоинтов аутентификации
-                        .anyRequest().authenticated() // Остальные запросы требуют авторизации
+                        .requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll() // Доступ для эндпоинтов аутентификации
+                        .anyRequest()
+                        .authenticated() // Остальные запросы требуют авторизации
                 );
 
         return http.build();

@@ -1,8 +1,6 @@
 package danila.sukhov.auth_service.configs.jwt;
 
 import danila.sukhov.auth_service.api.services.UserDetailsImp;
-import danila.sukhov.auth_service.store.entities.Role;
-import danila.sukhov.auth_service.store.entities.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -16,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.stream.Collectors;
+
 
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -61,4 +59,5 @@ public class JWTUtils {
             return false;
         }
     }
+
 }

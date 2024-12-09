@@ -86,11 +86,11 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User findUserByLogin(String login) {
-        return null;
+        return userRepository.findUserByLogin(login);
     }
 
     @Override
-    public User update(UpdateDTO updateDto, User currentActor) {
+    public User update(UpdateDTO updateDto, User currentUser) {
         return null;
     }
 

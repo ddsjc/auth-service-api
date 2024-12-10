@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -36,6 +37,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserServiceImpl implements UserService{
+
+    private final KafkaTemplate<String, String> kafkaTemplate;
+
     @Autowired
     UserRepository userRepository;
 
@@ -49,6 +53,9 @@ public class UserServiceImpl implements UserService{
     JWTUtils jwtProvider;
 
     AuthenticationManager authenticationManager;
+
+    @Autowired
+    ObjectMapper objectMapper;
     public MessageResponse registerUser(RegistrationDTO registrationDTO){
         if(userRepository.existsByLogin(registrationDTO.getLogin())){
             throw new RuntimeException("User already exists!");
@@ -83,6 +90,13 @@ public class UserServiceImpl implements UserService{
 
         user.setRoles(roles);
         userRepository.save(user);
+
+        try {
+            String userJson = objectMapper.writeValueAsString(user);
+            kafkaTemplate.send("user_registration", userJson);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return new MessageResponse("Пользователь : " + user.getLogin() + " успешно зарегистрирован");
     }

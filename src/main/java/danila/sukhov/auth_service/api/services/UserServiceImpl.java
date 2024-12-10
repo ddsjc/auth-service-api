@@ -1,7 +1,10 @@
 package danila.sukhov.auth_service.api.services;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import danila.sukhov.auth_service.api.dtos.*;
 import danila.sukhov.auth_service.api.exception.GlobalException;
+import danila.sukhov.auth_service.api.factories.UserDTOFactory;
 import danila.sukhov.auth_service.configs.jwt.JWTUtils;
 import danila.sukhov.auth_service.store.entities.ERole;
 import danila.sukhov.auth_service.store.entities.Role;
@@ -88,11 +91,24 @@ public class UserServiceImpl implements UserService{
     public User findUserByLogin(String login) {
         return userRepository.findUserByLogin(login);
     }
-
+    //
     @Override
     public User update(UpdateDTO updateDto, User currentUser) {
-        return null;
+
+        if((!currentUser.getLogin().equals(updateDto.getLogin()) && userRepository.existsByLogin(currentUser.getLogin()))){
+            throw new GlobalException(String.format("User with login:  \"%s\" already exists!", currentUser.getLogin()), HttpStatus.BAD_REQUEST);
+        }
+        currentUser.setId(currentUser.getId());
+        currentUser.setName(updateDto.getName().isBlank() ? currentUser.getName() : updateDto.getName());
+        currentUser.setSurname(updateDto.getSurname().isBlank() ? currentUser.getSurname() : updateDto.getSurname());
+        currentUser.setLogin(updateDto.getLogin().isBlank() ? currentUser.getLogin() : updateDto.getLogin());
+        currentUser.setPassword(updateDto.getPassword().isBlank() ? currentUser.getPassword() : passwordEncoder.encode(updateDto.getPassword()));
+
+        userRepository.saveAndFlush(currentUser);
+        return currentUser;
     }
+
+
 
     public JWTResponceDTO loginUser(LoginDTO loginDTO){
         Authentication authentication = authenticationManager

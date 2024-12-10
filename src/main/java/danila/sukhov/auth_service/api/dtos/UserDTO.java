@@ -1,21 +1,20 @@
 package danila.sukhov.auth_service.api.dtos;
 
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-
 import java.time.Instant;
 
-
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RegistrationDTO {
+public class UserDTO {
+    @NotBlank
+    Long id;
 
     String name;
 
@@ -32,5 +31,4 @@ public class RegistrationDTO {
     Instant createdAt = Instant.now();
 
     String role;
-
 }

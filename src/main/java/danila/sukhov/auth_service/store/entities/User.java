@@ -35,15 +35,15 @@ public class User {
     @Column(unique = true, nullable = false)
     String login;
 
+    //@JsonIgnore
     @Column(nullable = false)
-    @JsonIgnore
     String password;
 
     @Builder.Default
     Instant createdAt = Instant.now();
 
+    //@JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
-    @JsonIgnore
     @Fetch(FetchMode.JOIN)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),

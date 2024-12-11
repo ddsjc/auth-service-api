@@ -98,6 +98,8 @@ public class UserServiceImpl implements UserService{
             e.printStackTrace();
         }
 
+        //userRepository.save(user);
+
         return new MessageResponse("Пользователь : " + user.getLogin() + " успешно зарегистрирован");
     }
 

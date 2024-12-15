@@ -37,6 +37,13 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(cors -> cors.configurationSource(request -> {
+                    var corsConfig = new org.springframework.web.cors.CorsConfiguration();
+                    corsConfig.addAllowedOriginPattern("*"); // Разрешить запросы с любого источника
+                    corsConfig.addAllowedMethod("*");       // Разрешить все методы (POST, GET и т.д.)
+                    corsConfig.addAllowedHeader("*");       // Разрешить все заголовки
+                    return corsConfig;
+                }))
                 .csrf(csrf -> csrf.disable()) // Отключаем CSRF (если API работает без форм)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll() // Доступ для эндпоинтов аутентификации
